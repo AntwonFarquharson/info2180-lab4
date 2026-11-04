@@ -63,10 +63,33 @@ $superheroes = [
   ], 
 ];
 
-?>
+// Search Logic for Exercise 3
+$query = isset($_GET['query']) ? trim($_GET['query']) : '';
 
-<ul>
-<?php foreach ($superheroes as $superhero): ?>
-  <li><?= $superhero['alias']; ?></li>
-<?php endforeach; ?>
-</ul>
+if ($query === '') {
+    // No search query: display the full list
+    echo "<ul>";
+    foreach ($superheroes as $superhero) {
+        echo "<li>" . htmlspecialchars($superhero['alias']) . "</li>";
+    }
+    echo "</ul>";
+} else {
+    // Search query provided: find the specific superhero
+    $found = null;
+    foreach ($superheroes as $superhero) {
+        if (strcasecmp($superhero['name'], $query) === 0 || strcasecmp($superhero['alias'], $query) === 0) {
+            $found = $superhero;
+            break;
+        }
+    }
+
+    // Display the result or "not found" message
+    if ($found) {
+        echo "<h3>" . htmlspecialchars($found['alias']) . "</h3>";
+        echo "<h4>" . htmlspecialchars($found['name']) . "</h4>";
+        echo "<p>" . htmlspecialchars($found['biography']) . "</p>";
+    } else {
+        echo "<p><strong>Superhero not found</strong></p>";
+    }
+}
+?>
